@@ -1,25 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import "semantic-ui-css/semantic.min.css";
+import 'react-datepicker/dist/react-datepicker.css';
+
+import { Amplify } from 'aws-amplify';
+import ApiConfig from './aws-exports';
+
+import AllEvents from './Components/AllEvents';
+import NewEvent from './Components/NewEvent';
+import ViewEvent from './Components/ViewEvent';
+
+Amplify.configure(ApiConfig);
+
+const Home = () => (
+  <div className="ui container">
+    <AllEvents />
+  </div>
+);
+
+const App = () => (
+  <Router>
+    <div>
+      <Route exact={true} path="/" component={Home} />
+      <Route path="/event/:id" component={ViewEvent} />
+      <Route path="/newEvent" component={NewEvent} />
     </div>
-  );
-}
+  </Router>
+);
 
 export default App;
