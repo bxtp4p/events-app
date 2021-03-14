@@ -4,6 +4,7 @@ import { API } from 'aws-amplify';
 import {listEvents} from "../graphql/queries";
 import {deleteEvent} from "../graphql/mutations";
 import moment from "moment";
+import { logMetricsAndEvents } from "../Utils";
 
 class AllEvents extends Component {
 
@@ -20,8 +21,12 @@ class AllEvents extends Component {
         e.preventDefault();
 
         if (window.confirm(`Are you sure you want to delete event '${event.name}'`)) {
-            await API.graphql( { query: deleteEvent, variables: { id: event.id } });
-            this.handleSync();
+            API.graphql( { query: deleteEvent, variables: { id: event.id } })
+            .then( data => {
+                console.log(data);
+                logMetricsAndEvents(data);
+                this.handleSync();
+            });
         }
     }
 
@@ -29,7 +34,6 @@ class AllEvents extends Component {
         this.setState({ busy: true });
 
         const events = await API.graphql({ query: listEvents });
-        console.log(events);
         this.setState({ busy: false, events: events.data.listEvents.items });
     }
 

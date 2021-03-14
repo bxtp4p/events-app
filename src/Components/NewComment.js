@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {commentOnEvent} from "../graphql/mutations";
 import moment from "moment";
 import { API } from 'aws-amplify';
-
+import { logMetricsAndEvents } from "../Utils";
 
 class NewComment extends Component {
     static defaultState = {
@@ -22,16 +22,17 @@ class NewComment extends Component {
 
         this.setState({ loading: true });
 
-        await API.graphql({ query: commentOnEvent, 
+        API.graphql({ query: commentOnEvent, 
             variables: {
                 eventId: eventId,
                 content: `${comment.content.trim()}`,
                 createdAt: moment.utc().format()
             }
+        }).then( data => {
+            console.log(data);
+            logMetricsAndEvents(data);
+            this.setState(NewComment.defaultState);
         });
-
-
-        this.setState(NewComment.defaultState);
     }
 
     handleChange = ({ target: { value: content } }) => {

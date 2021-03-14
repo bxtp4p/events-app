@@ -4,6 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+window.SplunkRum && window.SplunkRum.init({
+  beaconUrl: 'https://rum-ingest.us0.signalfx.com/v1/rum',
+  rumAuth: process.env.REACT_APP_RUM_AUTH_TOKEN,
+  app: 'events-app-frontend',
+  environment: 'events-app',
+  debug: true
+});
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

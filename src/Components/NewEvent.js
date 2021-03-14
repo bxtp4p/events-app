@@ -7,7 +7,7 @@ import {createEvent} from "../graphql/mutations";
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
-import { nearest15min } from "../Utils";
+import { nearest15min, logMetricsAndEvents } from "../Utils";
 import DateTimePickerCustomInput from "./DateTimePickerCustomInput";
 
 class NewEvent extends Component {
@@ -15,7 +15,7 @@ class NewEvent extends Component {
     state = {
         event: {
             name: '',
-            when: nearest15min().format('MMMM d, YYYY h:mm a'),
+            when: nearest15min(),
             where: '',
             description: '',
         }
@@ -47,6 +47,9 @@ class NewEvent extends Component {
                 where: event.where,
                 description: `${event.description.trim()}`
             }
+        }).then( data => {
+            console.log(data);
+            logMetricsAndEvents(data);
         });
 
         history.push('/');
